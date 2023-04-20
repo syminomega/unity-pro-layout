@@ -1,0 +1,24 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <uie:ObjectField label="Prefab To Copy" type="UnityEngine.GameObject, UnityEngine.CoreModule" binding-path="prefabToCopy" allow-scene-objects="false" style="flex-shrink: 1; max-height: 36px;" />
+    <ui:VisualElement name="CountInput" style="flex-grow: 0; flex-direction: row; margin-left: 4px; margin-right: 4px;">
+        <ui:Label tabindex="-1" text="Count" style="width: 60px; flex-direction: row; -unity-text-align: middle-left;" />
+        <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" style="-unity-text-align: middle-right; width: 16px;" />
+        <ui:IntegerField value="1" binding-path="countX" style="flex: 1;" />
+        <ui:Label tabindex="-1" text="Y" display-tooltip-when-elided="true" style="-unity-text-align: middle-right; width: 16px;" />
+        <ui:IntegerField value="1" binding-path="countY" style="flex: 1;" />
+        <ui:Label tabindex="-1" text="Z" display-tooltip-when-elided="true" style="-unity-text-align: middle-right; width: 16px;" />
+        <ui:IntegerField value="1" binding-path="countZ" style="flex: 1;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="DistanceInput" style="flex-grow: 0; flex-direction: row; margin-left: 4px; margin-right: 4px;">
+        <ui:Label tabindex="-1" text="Distance" style="width: 60px; flex-direction: row; -unity-text-align: middle-left;" />
+        <ui:Label tabindex="-1" text="X" display-tooltip-when-elided="true" style="-unity-text-align: middle-right; width: 16px;" />
+        <ui:FloatField value="0" binding-path="distanceX" style="flex: 1;" />
+        <ui:Label tabindex="-1" text="Y" display-tooltip-when-elided="true" style="-unity-text-align: middle-right; width: 16px;" />
+        <ui:FloatField value="0" binding-path="distanceY" style="flex: 1;" />
+        <ui:Label tabindex="-1" text="Z" display-tooltip-when-elided="true" style="-unity-text-align: middle-right; width: 16px;" />
+        <ui:FloatField value="0" binding-path="distanceZ" style="flex: 1;" />
+    </ui:VisualElement>
+    <ui:Button text="Update Array" display-tooltip-when-elided="true" name="btn_UpdateArray" />
+    <ui:Foldout text="Raw Inspector" name="fold_DefaultInspector" value="false" />
+    <ui:VisualElement style="flex-grow: 1;" />
+</ui:UXML>
