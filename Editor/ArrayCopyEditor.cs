@@ -25,7 +25,9 @@ namespace ProLayout.Editor
             InspectorElement.FillDefaultInspector(inspectorFoldout, serializedObject, this);
 
             var updateButton = visualTree.Q<Button>("btn_UpdateArray");
-            updateButton.clicked += () => { _arrayCopy.Generate(); };
+            updateButton.clicked += _arrayCopy.Generate;
+            var extractButton = visualTree.Q<Button>("btn_Extract");
+            extractButton.clicked += _arrayCopy.Extract;
 
             return visualTree;
         }

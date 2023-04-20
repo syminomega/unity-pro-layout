@@ -1,7 +1,7 @@
 {
   "name": "com.symin.pro-layout",
   "description": "Tools for layout.",
-  "version": "0.1.0-preview.1",
+  "version": "0.1.0-preview.2",
   "unity": "2021.3",
   "displayName": "Pro Layout",
   "dependencies": {

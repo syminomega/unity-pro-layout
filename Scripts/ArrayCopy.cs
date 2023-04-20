@@ -12,7 +12,7 @@ namespace ProLayout
         public GameObject prefabToCopy;
 
         // 存放拷贝对象的集合
-        [SerializeField] [HideInInspector] private GameObject copiedCollectionObject;
+        [SerializeField] private GameObject copiedCollectionObject;
 
         public float distanceX;
         [Min(1)] public int countX = 1;
@@ -23,6 +23,7 @@ namespace ProLayout
         public float distanceZ;
         [Min(1)] public int countZ = 1;
 
+        public bool useContainerRotation = true;
         public void Generate()
         {
             //删除原有模型
@@ -56,8 +57,30 @@ namespace ProLayout
             {
                 var pos = new Vector3(item.x * distanceX, item.y * distanceY, item.z * distanceZ);
                 var newItem = Instantiate(prefabToCopy, copiedCollectionObject.transform, true);
+                if (useContainerRotation)
+                {
+                    newItem.transform.rotation = this.transform.rotation;
+                }
                 newItem.transform.localPosition = pos;
             }
+            Debug.Log("阵列完成");
+        }
+
+        public void Extract()
+        {
+            if (copiedCollectionObject == null)
+            {
+                Debug.LogWarning("没有创建的对象");
+                return;
+            }
+
+            var copied = copiedCollectionObject;
+            copiedCollectionObject = null;
+            
+            copied.hideFlags ^= HideFlags.HideInHierarchy;
+            copied.transform.SetParent(null);
+            
+            Debug.Log("提取完成");
         }
     }
 }

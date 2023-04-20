@@ -1,4 +1,4 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <uie:ObjectField label="Prefab To Copy" type="UnityEngine.GameObject, UnityEngine.CoreModule" binding-path="prefabToCopy" allow-scene-objects="false" style="flex-shrink: 1; max-height: 36px;" />
     <ui:VisualElement name="CountInput" style="flex-grow: 0; flex-direction: row; margin-left: 4px; margin-right: 4px;">
         <ui:Label tabindex="-1" text="Count" style="width: 60px; flex-direction: row; -unity-text-align: middle-left;" />
@@ -18,7 +18,11 @@
         <ui:Label tabindex="-1" text="Z" display-tooltip-when-elided="true" style="-unity-text-align: middle-right; width: 16px;" />
         <ui:FloatField value="0" binding-path="distanceZ" style="flex: 1;" />
     </ui:VisualElement>
-    <ui:Button text="Update Array" display-tooltip-when-elided="true" name="btn_UpdateArray" />
+    <ui:Toggle label="Use Container Rotation" binding-path="useContainerRotation" />
+    <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+        <ui:Button text="Update Array" display-tooltip-when-elided="true" name="btn_UpdateArray" style="flex-grow: 1;" />
+        <ui:Button text="Extract Array" display-tooltip-when-elided="true" name="btn_Extract" style="flex-grow: 1;" />
+    </ui:VisualElement>
     <ui:Foldout text="Raw Inspector" name="fold_DefaultInspector" value="false" />
     <ui:VisualElement style="flex-grow: 1;" />
 </ui:UXML>
