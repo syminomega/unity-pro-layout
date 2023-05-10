@@ -1,7 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace ProLayout
@@ -56,7 +56,12 @@ namespace ProLayout
             foreach (var item in xyz)
             {
                 var pos = new Vector3(item.x * distanceX, item.y * distanceY, item.z * distanceZ);
-                var newItem = Instantiate(prefabToCopy, copiedCollectionObject.transform, true);
+#if UNITY_EDITOR
+                var newItem = PrefabUtility.InstantiatePrefab(prefabToCopy) as GameObject;
+                newItem.transform.SetParent(copiedCollectionObject.transform, false);
+#else
+                var newItem = Instantiate(prefabToCopy, copiedCollectionObject.transform, false);
+#endif
                 if (useContainerRotation)
                 {
                     newItem.transform.rotation = this.transform.rotation;
@@ -76,10 +81,10 @@ namespace ProLayout
 
             var copied = copiedCollectionObject;
             copiedCollectionObject = null;
-            
+
             copied.hideFlags ^= HideFlags.HideInHierarchy;
             copied.transform.SetParent(null);
-            
+
             Debug.Log("提取完成");
         }
     }

@@ -1,4 +1,5 @@
 using ProLayout.Utilities;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ProLayout
@@ -32,7 +33,7 @@ namespace ProLayout
         [SerializeField] public ControlPoint[] controlPoints;
 
         //线宽度
-        [SerializeField] [Min(0)] private float lineWidth = 1f;
+        [SerializeField][Min(0)] private float lineWidth = 1f;
 
         //材质
         [SerializeField] private Material lineMaterial;
@@ -105,23 +106,68 @@ namespace ProLayout
             {
                 return;
             }
-
             mesh.Clear();
-            mesh.vertices = new[]
+            //存放顶点
+            List<Vector3> meshVertices = new List<Vector3>();
+            //存放UV
+            List<Vector2> meshUVs = new List<Vector2>();
+            //存放三角形顶点索引
+            List<int> meshTriangles = new List<int>();
+            //累加长度
+            float totalLength = 0;
+            //网格分段索引，用于计算三角形顶点索引
+            int segIndex = 0;
+            //上一个点位置
+            Vector3 lastPoint = controlPoints[0].pMain;
+
+            //计算初始顶点信息
+            var p0L = BezierUtility.GetBezierOffsetPoint(controlPoints[0], controlPoints[1], 0, lineWidth / 2);
+            var p0R = BezierUtility.GetBezierOffsetPoint(controlPoints[0], controlPoints[1], 0, -lineWidth / 2);
+
+            meshVertices.Add(p0L);
+            meshVertices.Add(p0R);
+            meshUVs.Add(new Vector2(0, 0));
+            meshUVs.Add(new Vector2(0, 1));
+
+
+            //循环每个控制点，从第二个点开始，
+            for (var pI = 1; pI < controlPoints.Length; pI++)
             {
-                new Vector3(0, 0, 0), new Vector3(1, 0, 0),
-                new Vector3(0, 0, 1), new Vector3(1, 0, 1)
-            };
-            mesh.triangles = new[]
-            {
-                0, 1, 2,
-                1, 3, 2,
-            };
-            mesh.uv = new[]
-            {
-                new Vector2(0, 0), new Vector2(1, 0),
-                new Vector2(0, 1), new Vector2(1, 1),
-            };
+                //按step分割t
+                for (var t = 0.2f; t <= 1; t += 0.2f)
+                {
+                    //计算当前t的两侧顶点
+                    var pL = BezierUtility.GetBezierOffsetPoint(controlPoints[pI - 1], controlPoints[pI], t, lineWidth / 2);
+                    var pR = BezierUtility.GetBezierOffsetPoint(controlPoints[pI - 1], controlPoints[pI], t, -lineWidth / 2);
+                    //添加两侧顶点
+                    meshVertices.Add(pL);
+                    meshVertices.Add(pR);
+                    //获取当前中心点的位置
+                    var currentPoint = BezierUtility.GetBezierPoint(controlPoints[pI - 1], controlPoints[pI], t);
+                    //计算当前点到上一个点的距离，并计算总长度
+                    var distance = Vector3.Distance(currentPoint, lastPoint);
+                    totalLength += distance;
+                    lastPoint = currentPoint;
+                    //计算当前顶点的uv坐标
+                    var uvL = new Vector2(totalLength / lineWidth, 0);
+                    var uvR = new Vector2(totalLength / lineWidth, 1);
+                    //添加uv
+                    meshUVs.Add(uvL);
+                    meshUVs.Add(uvR);
+                    //添加三角形索引
+                    meshTriangles.Add(segIndex * 2);
+                    meshTriangles.Add(segIndex * 2 + 1);
+                    meshTriangles.Add(segIndex * 2 + 2);
+                    meshTriangles.Add(segIndex * 2 + 1);
+                    meshTriangles.Add(segIndex * 2 + 3);
+                    meshTriangles.Add(segIndex * 2 + 2);
+
+                    segIndex++;
+                }
+            }
+            mesh.vertices = meshVertices.ToArray();
+            mesh.uv = meshUVs.ToArray();
+            mesh.triangles = meshTriangles.ToArray();
             mesh.RecalculateNormals();
         }
 
@@ -134,7 +180,7 @@ namespace ProLayout
                 handleCollectionObject.transform.SetParent(this.transform, false);
                 handleCollectionObject.hideFlags |= HideFlags.DontSaveInBuild;
             }
-        
+
             if (!showDetailObjects)
             {
                 handleCollectionObject.hideFlags |= HideFlags.HideInHierarchy;
@@ -157,5 +203,7 @@ namespace ProLayout
                 cpObject.AddComponent<ControlPointHandle>();
             }
         }
+
     }
+
 }
