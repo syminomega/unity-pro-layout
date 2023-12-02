@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,6 +15,9 @@ namespace ProLayout
         // 存放拷贝对象的集合
         [SerializeField] private GameObject copiedCollectionObject;
 
+        // 存放拷贝对象的集合
+        [HideInInspector][SerializeField] private List<GameObject> copiedObjects = new List<GameObject>();
+
         public float distanceX;
         [Min(1)] public int countX = 1;
 
@@ -24,11 +28,14 @@ namespace ProLayout
         [Min(1)] public int countZ = 1;
 
         public bool useContainerRotation = true;
+
+
         public void Generate()
         {
             //删除原有模型
             if (copiedCollectionObject != null)
             {
+                copiedObjects.Clear();
                 DestroyImmediate(copiedCollectionObject);
                 copiedCollectionObject = null;
             }
@@ -67,6 +74,8 @@ namespace ProLayout
                     newItem.transform.rotation = this.transform.rotation;
                 }
                 newItem.transform.localPosition = pos;
+
+                copiedObjects.Add(newItem);
             }
             Debug.Log("阵列完成");
         }
@@ -86,6 +95,23 @@ namespace ProLayout
             copied.transform.SetParent(null);
 
             Debug.Log("提取完成");
+        }
+
+        public GameObject GetObject(int index)
+        {
+            if (index < 0 || index >= copiedObjects.Count)
+            {
+                Debug.LogWarning("索引超出范围");
+                return null;
+            }
+
+            return copiedObjects[index];
+        }
+
+        public GameObject GetObject(int x, int y, int z)
+        {
+            var index = x + y * countX + z * countX * countY;
+            return GetObject(index);
         }
     }
 }
