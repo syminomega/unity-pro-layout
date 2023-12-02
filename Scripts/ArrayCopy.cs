@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 #if UNITY_EDITOR
@@ -15,8 +16,15 @@ namespace ProLayout
         // 存放拷贝对象的集合
         [SerializeField] private GameObject copiedCollectionObject;
 
+        [Serializable]
+        class CopiedObject
+        {
+            public int index;
+            public GameObject obj;
+        }
+
         // 存放拷贝对象的集合
-        [HideInInspector][SerializeField] private List<GameObject> copiedObjects = new List<GameObject>();
+        [SerializeField] private List<CopiedObject> copiedObjects = new();
 
         public float distanceX;
         [Min(1)] public int countX = 1;
@@ -75,7 +83,11 @@ namespace ProLayout
                 }
                 newItem.transform.localPosition = pos;
 
-                copiedObjects.Add(newItem);
+                copiedObjects.Add(new CopiedObject
+                {
+                    index = item.x + item.y * countX + item.z * countX * countY,
+                    obj = newItem
+                });
             }
             Debug.Log("阵列完成");
         }
@@ -105,7 +117,7 @@ namespace ProLayout
                 return null;
             }
 
-            return copiedObjects[index];
+            return copiedObjects.Where(x => x.index == index).FirstOrDefault()?.obj;
         }
 
         public GameObject GetObject(int x, int y, int z)
