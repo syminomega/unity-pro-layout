@@ -1,6 +1,6 @@
 {
     "name": "ProLayout",
-    "rootNamespace": "SyminStudio.ProLayout",
+    "rootNamespace": "ProLayout",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

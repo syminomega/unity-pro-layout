@@ -1,6 +1,6 @@
 {
     "name": "ProLayout.Editor",
-    "rootNamespace": "SyminStudio.ProLayout",
+    "rootNamespace": "ProLayout",
     "references": [
         "GUID:48fce540e293a744690492e11e6f5963"
     ],

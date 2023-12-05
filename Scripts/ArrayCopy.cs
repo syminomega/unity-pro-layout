@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
+using ProLayout.Utilities;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -16,15 +15,8 @@ namespace ProLayout
         // 存放拷贝对象的集合
         [SerializeField] private GameObject copiedCollectionObject;
 
-        [Serializable]
-        class CopiedObject
-        {
-            public int index;
-            public GameObject obj;
-        }
-
         // 存放拷贝对象的集合
-        [SerializeField] private List<CopiedObject> copiedObjects = new();
+        [SerializeField] private SerializableDictionary<int, GameObject> copiedObjects;
 
         public float distanceX;
         [Min(1)] public int countX = 1;
@@ -72,7 +64,7 @@ namespace ProLayout
             {
                 var pos = new Vector3(item.x * distanceX, item.y * distanceY, item.z * distanceZ);
 #if UNITY_EDITOR
-                var newItem = PrefabUtility.InstantiatePrefab(prefabToCopy) as GameObject;
+                var newItem = (GameObject)PrefabUtility.InstantiatePrefab(prefabToCopy);
                 newItem.transform.SetParent(copiedCollectionObject.transform, false);
 #else
                 var newItem = Instantiate(prefabToCopy, copiedCollectionObject.transform, false);
@@ -81,14 +73,15 @@ namespace ProLayout
                 {
                     newItem.transform.rotation = this.transform.rotation;
                 }
+
                 newItem.transform.localPosition = pos;
 
-                copiedObjects.Add(new CopiedObject
-                {
-                    index = item.x + item.y * countX + item.z * countX * countY,
-                    obj = newItem
-                });
+                //添加到集合中
+                var index = item.x + item.y * countX + item.z * countX * countY;
+                copiedObjects.Add(index, newItem);
+
             }
+
             Debug.Log("阵列完成");
         }
 
@@ -111,13 +104,13 @@ namespace ProLayout
 
         public GameObject GetObject(int index)
         {
-            if (index < 0 || index >= copiedObjects.Count)
+            if (index >= 0 && index < copiedObjects.Count)
             {
-                Debug.LogWarning("索引超出范围");
-                return null;
+                return copiedObjects[index];
             }
 
-            return copiedObjects.Where(x => x.index == index).FirstOrDefault()?.obj;
+            Debug.LogWarning("索引超出范围");
+            return null;
         }
 
         public GameObject GetObject(int x, int y, int z)
